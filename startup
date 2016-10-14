@@ -1,0 +1,13 @@
+--TLCO
+local a = _G.printError
+function _G.printError()
+  _G.printError = a
+  term.redirect(term.native())
+  term.clear()
+  term.setCursorPos(1,1)
+  local ok, err = pcall(function()
+    dofile "boot/boot.lua"
+  end)
+  if(not ok) then printError(err) os.pullEvent("key") dofile "boot/rescue.lua" end
+end
+os.queueEvent("modem_message",0)

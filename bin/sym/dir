@@ -1,0 +1,26 @@
+local list = fs.list(shell.getCurrentDir())
+
+local dirs,files = {},{}
+
+for k,v in pairs(list) do
+  if(fs.isDir(fs.combine(shell.getCurrentDir(),v))) then
+    dirs[#dirs+1] = v
+  else
+    files[#files+1] = v
+  end
+end
+
+local perLine = 4
+local current = 1
+
+term.setTextColor(colors.yellow)
+for k,v in pairs(dirs) do
+  _ENV[current < perLine and "write" or "print"](v.. " ")
+end
+
+term.setTextColor(colors.white)
+for k,v in pairs(files) do
+  _ENV[current < perLine and "write" or "print"](v.. " ")
+end
+
+print()
