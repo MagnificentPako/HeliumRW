@@ -1,1 +1,3 @@
+if(not fs.exists(...)) then error("Folder doesn't exist",0) end
+if(not fs.isDir(...) and (tostring(...) ~= "/") ) then error("This is not a folder",0) end
 shell.setCurrentDir(...)

@@ -7,7 +7,6 @@ local conf = Config:new("shell", function() new = true end)
 local currentDir = "/"
 local path = "/bin"
 
-local commands = {}
 local running = true
 
 _G.shell = {}
@@ -89,7 +88,6 @@ local function checkFile(name)
   return nil
 end
 
-
 local function shell()
   while running do
     term.setTextColor(conf:get "colors.user")
@@ -113,14 +111,18 @@ local function shell()
     if(not file) then
       term.setTextColor(conf:get "colors.error")
       print(i18n "shell.error.command_not_found" )
-      return
+    else
+      local handle = fs.open(file,"r")
+      local cont = handle.readAll()
+      handle.close()
+      local ok, err = load(cont,"",nil,getfenv())
+      local o,e = pcall(function()
+        ok(select(2,unpack(command)))
+      end)
+      if(not o) then
+        printError(e)
+      end
     end
-
-    local handle = fs.open(file,"r")
-    local cont = handle.readAll()
-    handle.close()
-    local ok, err = load(cont,"",nil,getfenv())
-    ok(select(2,unpack(command)))
   end
 end
 

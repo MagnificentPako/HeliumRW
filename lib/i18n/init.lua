@@ -32,7 +32,7 @@ local pluralizeFunction
 local defaultLocale = 'en'
 local fallbackLocale = defaultLocale
 
-local path = (...):gsub("%.init$","")
+local path = (...):gsub("init%.lua$","")
 
 local plural      = require(path .. '.plural')
 local interpolate = require(path .. '.interpolate')

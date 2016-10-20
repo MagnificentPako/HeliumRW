@@ -1,6 +1,5 @@
 local Config = class "Config"
 
-
 local function dotSplit(str)
   local fields, length = {},0
     str:gsub("[^%.]+", function(c)
@@ -13,6 +12,9 @@ end
 function Config:initialize(name, callback)
   self._conf = {}
   self._name = name
+  if(not fs.exists "config") then
+    fs.makeDir "config"
+  end
   if(fs.exists(fs.combine("config",name..".json"))) then
     local handle = fs.open(fs.combine("config",name..".json"),"r")
     self._conf = JSON.parse(handle.readAll())
