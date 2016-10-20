@@ -66,7 +66,7 @@ local libs = {
 loadLibraries(libs)
 
 function os.getVersion()
-  return semver "0.0.1-alpha"
+  return semver "0.0.2-alpha"
 end
 
 function os.getName()
