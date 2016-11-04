@@ -1,0 +1,44 @@
+@class CoroutineManager {
+
+  initialize() |
+    self._coroutines = {}
+    self._id = 0
+  |
+
+  addCoroutine(co) |
+    self._coroutines[self._id+1] = {routine = co, filter = nil, active = true}
+    self._id = self._id+1
+    --return #self._id
+  |
+
+  removeCoroutine(id) |
+    self._coroutines[id] = nil
+  |
+
+  enableCoroutine(id) |
+    self._coroutines[id].active = true
+  |
+
+  disableCorotuine(id) |
+    self._coroutines[id].active = false
+  |
+
+  run() |
+    os.queueEvent("OMAHGAWD;REFRESH")
+    while true do
+      os.queueEvent "update"
+      local evt = {os.pullEvent()}
+      local e = evt[1]
+      for k,v in pairs(self._coroutines) do
+        if(v.filter == nil or v.filter == e or e == "terminate") then
+          if(v.active) then
+            if(coroutine.status(v.routine) ~= "dead") then
+              ok,v.filter = coroutine.resume(v.routine,unpack(evt))
+            end
+          end
+        end
+      end
+    end
+  |
+
+}

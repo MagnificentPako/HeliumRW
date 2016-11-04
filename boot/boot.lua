@@ -86,6 +86,6 @@ log:logify("Sandbox Shell",function()
   sandbox:addLib("lib.config","Config")
   sandbox:addLib("lib.clapp.clapp", "CLApp")
   for k,v in pairs(libs) do sandbox:addLib(v[2],v[1]) end
-  sandbox:run "bin/shell.lua"
+  sandbox:run "bin/bootstrap.lua"
 
 end)

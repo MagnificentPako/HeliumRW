@@ -10,5 +10,6 @@ proxy:add("Sandbox","lib.sandbox")
 proxy:add("semver", "lib.semver")
 proxy:add("SHA", "lib.sha")
 proxy:add("switch", "lib.switch")
+proxy:add("CoroutineManager", "lib.coroutine_manager")
 
 return proxy:convert()

@@ -1,0 +1,15 @@
+{
+"useColors": true,
+ "colors": {
+"arrow": 2,
+ "error": 16384,
+ "user": 8192,
+ "text": 1,
+ "hostname": {
+"color": 32,
+ "divider": {
+"char": "@",
+ "color": 256}
+}
+}
+}
