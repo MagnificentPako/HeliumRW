@@ -1,0 +1,85 @@
+local baseDir = "/box"
+
+import {RamFS,WrapperFS} from lib.fs.types
+@class Sandbox {
+  resetEnv() |
+    self._proxy = {}
+    self._readOnly = {}
+    local function indexResolver(t,k)
+      if(self._readOnly[k]) then return self._readOnly[k] end
+      return self._proxy[k] and self._proxy[k] or self._global[k]
+    end
+
+    local function newindexResolver(t,k,v)
+      if(self._readOnly[k]) then return end
+      self._proxy[k] = v
+    end
+    self._env = setmetatable({}, {__index = indexResolver, __newindex = newindexResolver, __metatable = false})
+
+    function self._readOnly.getfenv(...)
+      return getfenv(...) == self._global and self._env or getfenv(...)
+    end
+
+    function self._readOnly.loadfile(path)
+      if(not self._env.fs.exists(path)) then error("File not found!") end
+      local handle = self._env.fs.open(path,"r")
+      local f = loadstring(handle.readAll())
+      handle.close()
+      return f
+    end
+  |
+
+  initialize(name,global) |
+    self._name = name
+    self._global = global
+    if(not fs.exists(baseDir)) then fs.makeDir(baseDir) end
+    if(not fs.exists(fs.combine(baseDir, name))) then fs.makeDir(fs.combine(baseDir, name)) end
+    self:resetEnv()
+    self._middleware = {}
+    self._import = {}
+    self._libs = {}
+  |
+
+  addImport(f,t) |
+    table.insert(self._import, {from=f, to=t})
+  |
+
+  addMiddleware(middle) |
+    table.insert(self._middleware, middle)
+  |
+
+  addLib(p,n) |
+    table.insert(self._libs, {path=p, name=n})
+  |
+
+  run(path, ...) |
+    self:resetEnv()
+    local wrapper = WrapperFS:new(fs)
+    local ram = RamFS:new(wrapper)
+    for k,v in pairs(self._import) do
+      ram:import(v.from,v.to,true)
+    end
+
+    for k,v in pairs(self._middleware) do
+      ram:addMiddleware(v)
+    end
+
+    for k,v in pairs(self._libs) do
+      self._env[v.name] = require(v.path, self._env)
+    end
+
+    ram:makeDir("persistent")
+    ram:import(fs.combine(baseDir, self._name), "persistent", true)
+    self._env.fs = ram:makeLegacy()
+
+    local args = {...}
+
+    local ok,err = pcall(function()
+      print(loadfile)
+      loadfile(path, self._env)(args)
+    end)
+    ram:export("persistent",fs.combine(baseDir, self._name),true)
+  |
+
+
+}

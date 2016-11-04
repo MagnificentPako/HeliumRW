@@ -7,6 +7,8 @@ local conf = Config:new("shell", function() new = true end)
 local currentDir = "/"
 local path = "/bin"
 
+require "lib.container"
+
 local running = true
 
 _G.shell = {}

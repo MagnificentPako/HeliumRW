@@ -1,0 +1,20 @@
+import Base64 from lib
+import BaseMiddleware from lib.fs.middleware
+
+@class Base64Middleware extends BaseMiddleware {
+  beforeRead(txt) |
+    local cont = {}
+    for _,v in pairs(txt) do
+      cont[#cont+1] = Base64.decode(v)
+    end
+    return cont
+  |
+
+  beforeSave(txt) |
+    local cont = {}
+    for _,v in pairs(txt) do
+      cont[#cont+1] = Base64.encode(v)
+    end
+    return cont
+  |
+}

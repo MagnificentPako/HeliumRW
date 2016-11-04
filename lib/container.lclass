@@ -1,11 +1,10 @@
-local Ram = require "lib.fs.types.ram"
-local Wrapper = require "lib.fs.types.wrapper"
+import {RamFS,WrapperFS} from lib.fs.types
 
 @class Container {
 
   initialize() |
-    local wrapper = Wrapper:new(fs)
-    self._system = Ram:new(wrapper)
+    local wrapper = WrapperFS:new(fs)
+    self._system = RamFS:new(wrapper)
   |
 
   load(path) |

@@ -1,0 +1,11 @@
+@class BaseMiddleware {
+
+  beforeRead(txt) |
+    return txt
+  |
+
+  beforeSave(txt) |
+    return txt
+  |
+
+}

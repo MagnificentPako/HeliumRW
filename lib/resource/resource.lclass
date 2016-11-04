@@ -1,5 +1,4 @@
-local JSON = require "lib.json"
-
+import JSON from lib
 @class Resource {
 
   initialize() |
