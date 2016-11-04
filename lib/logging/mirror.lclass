@@ -1,0 +1,15 @@
+--This class will mirror everything into all the log-providers you give to it
+
+@class MirrorLog {
+
+  initialize(...) |
+    self._logs = {...}
+  |
+
+  log(tag,msg,col) |
+    for k,v in pairs(self._logs) do
+      v:log(tag,msg,col)
+    end
+  |
+
+}

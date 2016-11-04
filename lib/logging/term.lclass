@@ -1,0 +1,10 @@
+--This class let's you easily log to the term
+
+@class TermLog {
+  log(tag,msg,col) |
+    term.setTextColor(col)
+    term.write("["..tag.."]")
+    term.setTextColor(colors.white)
+    print(" "..msg)
+  |
+}
