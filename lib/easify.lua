@@ -4,7 +4,7 @@ local old = {
 
 local function catchError(func)
   local ok,err = pcall(func)
-  if(not ok) then error(err,5) end
+  if(not ok) then error(err,4) end
 end
 
 --[[
@@ -21,11 +21,15 @@ local function _dofile(path,reqenv)
   local reqenv = reqenv or _ENV
   if(not fs.exists(path)) then
     if(fs.exists(fs.combine(path,"")..".lua")) then
-      return loadfile(fs.combine(path,"")..".lua",reqenv)(path)
+      local ok,err = loadfile(fs.combine(path,"")..".lua",reqenv)
+      if(not ok) then error(err) end
+      return ok(path)
     end
     error("File not found. ")
   else
-    return loadfile(path,reqenv)(path)
+    local ok,err = loadfile(path,reqenv)
+    if(not ok) then error(err) end
+    return ok(path)
   end
 end
 

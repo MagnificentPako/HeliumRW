@@ -1,4 +1,4 @@
---This class will mirror everything onto all the log-providers you give to it
+--This class will mirror everything into all the log-providers you give to it
 
 local Mirror = class "MirrorLog"
 

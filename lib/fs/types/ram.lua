@@ -53,6 +53,29 @@ local function getNode(sys,path,create)
   end
 end
 
+local function deleteNode(sys,path)
+  local node = sys
+  local cr = create and true or false
+  local f,l = splitPath(path)
+  if(path == "/") then
+    for k,v in pairs(node) do node[k] = nil end
+  else
+    for i = 1, l do
+      if(not (f[i] == ".")) then
+        if(not node[f[i]]) then error("File doesn't exist",3) end
+        if((not node[f[i]].dir) and not(i == l)) then error("Not a folder",2) end
+        if(i == l) then
+          print("deleting node "..f[i])
+          print(sys["config"].content["shell.json"])
+          node[f[i]] = nil
+        else
+          node = node[f[i]].content
+        end
+      end
+    end
+  end
+end
+
 function Ram:initialize(parent)
   Base.initialize(self)
   self._parent = parent or fs
@@ -78,6 +101,10 @@ function Ram:saveFile(file)
   handle.close()
 end
 
+function Ram:dump()
+  return textutils.serialize(self._sys)
+end
+
 -- Import from the original FS into the RamFS
 function Ram:import(path,to,deep)
   local to = to or "/"
@@ -98,7 +125,6 @@ function Ram:import(path,to,deep)
       local comb = fs.combine(base,from)
       local f,l = splitPath(from)
       if(self._parent:isDir(comb)) then
-        print(base, " ",from, " ",too)
         self:makeDir(fs.combine(too,from))
         if(deep) then
           for k,v in pairs(self._parent:list(fs.combine(base,from))) do
@@ -120,7 +146,7 @@ end
 
 -- Excludes a specific file from the RamFS
 function Ram:exclude(path)
-  --#TODO: Add Ram:exclude
+  --#TODO:10 Add functionality to @ram_exclude +RamFS
 end
 
 -- Exports the RamFS into the original FS
@@ -132,6 +158,8 @@ function Ram:export(path,to,deep)
 
   local function exp(base,from,to)
 
+    print(base, from, to)
+
     if(self:exists(base) and (not self:isDir(base))) then
       local handle = self:open(fs.combine(base,from),"r")
       local content = handle.readAll()
@@ -140,7 +168,6 @@ function Ram:export(path,to,deep)
       handle.close()
       return
     end
-
     if(from == "") then
       if(to ~= "/") then
         self._parent:makeDir(to)
@@ -350,6 +377,12 @@ function Ram:copy(from,to)
       handle.write(content)
       handle.close()
     end
+  end
+end
+
+function Ram:delete(path)
+  if(self:exists(path)) then
+    deleteNode(self._sys, path)
   end
 end
 

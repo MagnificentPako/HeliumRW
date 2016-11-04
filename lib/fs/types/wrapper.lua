@@ -1,6 +1,8 @@
-local Wrapper = class("WrapperFS", require "lib.fs.types.base")
+local Base = require "lib.fs.types.base"
+local Wrapper = class("WrapperFS", Base)
 
 function Wrapper:initialize(parent)
+  Base.initialize(self)
   self._parent = parent or fs
 end
 

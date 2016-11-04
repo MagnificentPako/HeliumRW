@@ -15,7 +15,7 @@ end
 
 --And now I load all the good stuff
 
-_G["class"] = require "lib.middleclass"
+_G["class"] = require "lib.class.middleclass"
 
 --Load all the i18n stuff
 i18n = require "lib.i18n"
@@ -77,51 +77,12 @@ function os.getFullName()
   return os.getName() .. " " .. tostring(os.getVersion())
 end
 
---[[log:logify("FS-sanboxed shell", function()
-  local Wrapper = require "lib.fs.types.wrapper"
-  local Ram = require "lib.fs.types.ram"
-  local Base64Middleware = require "lib.fs.middleware.base64"
-  local wrapper = Wrapper:new(fs)
-  local ram = Ram:new(wrapper)
-
-  --ram:addMiddleware(Base64Middleware:new())
-
-  ram:import("bin/sym", "bin", true)
-
-  local envi = {}
-  local proxy = {}
-  local function indexResolver(t,k)
-    return proxy[k] and proxy[k] or _ENV[k]
-  end
-
-  local function newindexResolver(t,k,v)
-    proxy[k] = v
-  end
-
-  envi = setmetatable({}, {__index = indexResolver, __newindex = newindexResolver})
-
-  envi.fs = ram:makeLegacy()
-
-  loadLibraries(libs,envi,envi)
-  envi.i18n = require "lib.i18n"
-  envi.system = {}
-  envi.system.i18n = _ENV.i18n
-  envi.system.env = _ENV
-
-  ram:saveFile "ramfs"
-  sleep(5)
-
-  loadfile("bin/shell.lua",envi)()
-
-  ram:saveFile "ramfs"
-
-end)
-]]--
-
 log:logify("Sandbox Shell",function()
 
   sandbox = Sandbox:new("shell",_ENV)
   sandbox:addImport("bin/sym","bin")
+  sandbox:addLib("lib.i18n","i18n")
+  sandbox:addLib("lib.config","Config")
   for k,v in pairs(libs) do sandbox:addLib(v[2],v[1]) end
   sandbox:run "bin/shell.lua"
 

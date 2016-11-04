@@ -27,6 +27,10 @@ function shell.setCurrentDir(newDir)
   currentDir = newDir
 end
 
+function shell.getAbsolute(path)
+  return fs.combine(currentDir,path)
+end
+
 local function split(str,pat)
   local fields = {}
   local pat = pat or "%s"
@@ -46,9 +50,9 @@ if(new) then
   conf:save()
 end
 
-if(not fs.exists("lang")) then fs.makeDir("lang") end
-if(not fs.exists("lang/en.lua")) then
-  local handle = fs.open("lang/en.lua","w")
+if(not fs.exists("persistent/lang")) then fs.makeDir("persistent/lang") end
+if(not fs.exists("persistent/lang/en.lua")) then
+  local handle = fs.open("persistent/lang/en.lua","w")
   handle.write("return ")
   handle.write[[
   { en = {
@@ -64,7 +68,7 @@ if(not fs.exists("lang/en.lua")) then
   handle.close()
 end
 
-i18n.loadFile "lang/en.lua"
+i18n.loadFile "persistent/lang/en.lua"
 
 term.setTextColor(colors.gray)
 print(i18n("shell.welcome", {name = os.getFullName()}))

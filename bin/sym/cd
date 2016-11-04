@@ -1,3 +1,8 @@
-if(not fs.exists(...)) then error("Folder doesn't exist",0) end
-if(not fs.isDir(...) and (tostring(...) ~= "/") ) then error("This is not a folder",0) end
-shell.setCurrentDir(...)
+local args = {...}
+if(#args < 1) then error "Argument expected!" end
+local abs = shell.getAbsolute(...)
+if(not fs.exists(abs)) then error("Folder doesn't exist",0) end
+if((abs ~= "") and (args[1] ~= "/")) then
+  if(not fs.isDir(abs)) then error("Not a folder!") end
+end
+shell.setCurrentDir(abs == "" and "/" or abs)

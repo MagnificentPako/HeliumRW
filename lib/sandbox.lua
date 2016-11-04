@@ -22,6 +22,14 @@ function Sandbox:resetEnv()
     return getfenv(...) == self._global and self._env or getfenv(...)
   end
 
+  function self._readOnly.loadfile(path)
+    if(not self._env.fs.exists(path)) then error("File not found!") end
+    local handle = self._env.fs.open(path,"r")
+    local f = loadstring(handle.readAll())
+    handle.close()
+    return f
+  end
+
 end
 
 function Sandbox:initialize(name,global)
@@ -66,9 +74,15 @@ function Sandbox:run(path, ...)
   end
 
   ram:makeDir("persistent")
+  ram:import(fs.combine(baseDir, self._name), "persistent", true)
   self._env.fs = ram:makeLegacy()
 
-  loadfile(path, self._env)(...)
+  local args = {...}
+
+  local ok,err = pcall(function()
+    print(loadfile)
+    loadfile(path, self._env)(args)
+  end)
 
   ram:export("persistent",fs.combine(baseDir, self._name),true)
 end

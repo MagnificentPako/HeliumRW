@@ -10,17 +10,21 @@ for k,v in pairs(list) do
   end
 end
 
-local perLine = 4
+local perLine = 5
 local current = 1
 
 term.setTextColor(colors.yellow)
 for k,v in pairs(dirs) do
   _ENV[current < perLine and "write" or "print"](v.. " ")
+  current = current + 1
+  if(current>perLine) then current = 1 end
 end
 
 term.setTextColor(colors.white)
 for k,v in pairs(files) do
   _ENV[current < perLine and "write" or "print"](v.. " ")
+  current = current + 1
+  if(current>perLine) then current = 1 end
 end
 
 print()
