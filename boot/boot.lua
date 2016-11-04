@@ -84,6 +84,7 @@ log:logify("Sandbox Shell",function()
   sandbox:addImport("bin/sym","bin")
   sandbox:addLib("lib.i18n","i18n")
   sandbox:addLib("lib.config","Config")
+  sandbox:addLib("lib.clapp.clapp", "CLApp")
   for k,v in pairs(libs) do sandbox:addLib(v[2],v[1]) end
   sandbox:run "bin/shell.lua"
 
