@@ -1,78 +1,32 @@
-local baseCommand = {
-  name = "string",
-  alias = "table",
-  flags = "table",
-  args = "table",
-  executor = "function"
-}
-
 local Command = require "lib.clapp.command"
 
-local function expectTable(check,base)
+--[[local function expectTable(check,base)
   for k,v in pairs(base) do
     print(check[k], v, k)
     if(not check[k]) then return error("Key ["..k.."] not present") end
     if(type(check[k]) ~= v) then return error("Key ["..k.."] has the wrong value. Expected "..v..", got "..type(check[k])) end
   end
 end
-
-local function contains(t,o)
-  for k,v in pairs(t) do if(v == o) then return true end end
-  return false
-end
-
-local function parseString(str)
-  if(str:lower() == "true") then return true end
-  if(str:lower() == "false") then return false end
-  local ok = tonumber(str) ~= nil
-  if(ok) then return tonumber(str) end
-  return str
-end
-
-local function parseArgs(args, expectedFlags, expectedArgs)
-  local flags = {}
-  local argu = {}
-  local l = #args
-  for k,v in pairs(args) do
-      if(v:match("%-(.+)=(.+)")) then
-        local name,val = v:match("%-(.+)=(.+)")
-        flags[name] = parseString(val)
-      elseif(v:match("%-(.+)")) then
-        local name = v:match("%-(.+)")
-        flags[name] = true
-      else
-        if(not v:match("%-(.+)=(.+)") and not v:match("%-(.+)")) then
-          table.insert(argu, parseString(v))
-        end
-      end
-  end
-  expectTable(flags, expectedFlags)
-  expectTable(argu, expectedArgs)
-  return flags,argu
-end
+]]
 
 @class Application {
 
   initialize() |
     self._mainCommand = Command:new()
+    self._mainCommand:setMain(true)
   |
 
-  newCommand(cmd) |
-    table.insert(self._commands,cmd)
+  main(exec) |
+    self._mainCommand:setExecutor(exec)
+  |
+
+  newCommand(name) |
+    return self._mainCommand:newSubCommand(name)
   |
 
   run(...) |
     local args = {...}
-    local cmd = (args[1] and args[1]:sub(1,1) ~= "-") and args[1] or ""
-    for _,v in pairs(self._commands) do
-      if(v.name == cmd or contains(v.alias,cmd)) then
-        local unparsed = {select((cmd == "" and 1 or 2), unpack(args))}
-        local flags,args = parseArgs(unparsed, v.flags, v.args)
-        v.executor(flags,args)
-        return
-      end
-    end
-    error("Subcommand ["..cmd.."] not found!")
+    self._mainCommand:execute(args)
   |
 
 }

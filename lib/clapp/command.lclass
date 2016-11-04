@@ -26,13 +26,17 @@ local function parseArgs(args)
   return flags,argu
 end
 
+local function contains(t,o)
+  for k,v in pairs(t) do if(v == o) then return true end end
+  return false
+end
+
 @class Command {
 
   initialize(name) |
     self._name = name
     self._alias = {}
     self._executor = function() end
-    self._flags = {}
     self._subCommands = {}
     self._main = false
   |
@@ -47,11 +51,6 @@ end
 
   addAlias(al) |
     table.insert(self._alias, al)
-    return self
-  |
-
-  addFlag(flag) |
-    table.insert(self._flags,flag)
     return self
   |
 
@@ -84,17 +83,20 @@ end
 
   execute(args) |
     local args = args or {}
-    if(#args == 0) then self._executor() end
+    if(type(args) ~= "table") then args = {args} end
+    if(#args == 0) then self._executor() return end
     local first = args[1]
     if(first:sub(1,1) ~= "-") then
       for _,cmd in pairs(self._subCommands) do
-        if(cmd:getName() == first) then
-          cmd:execute(select(2,unpack(args)))
+        if(cmd:getName() == first or contains(cmd:getAlias(), first)) then
+          cmd:execute({select(2,unpack(args))})
+          return
         end
       end
-      error("Command "..self:getName()..": Subcommand ["..first.."] not found!")
+      local flags, arguments = parseArgs({select(1, unpack(args))})
+      self._executor(flags,arguments)
     else
-      local flags, arguments = parseArgs({select((self._main and 1 or 2), unpack(args))})
+      local flags, arguments = parseArgs({select(1, unpack(args))})
       self._executor(flags,arguments)
     end
   |
