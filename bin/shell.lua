@@ -99,7 +99,7 @@ local function shell()
     term.setTextColor(conf:get "colors.hostname.divider.color")
     term.write(conf:get "colors.hostname.divider.char")
     term.setTextColor(conf:get "colors.hostname.color")
-    term.write("host")
+    term.write(tostring(os.getComputerID()))
     term.setTextColor(conf:get "colors.arrow")
     term.write((currentDir == "/" and "" or " "..currentDir))
     term.write ">"

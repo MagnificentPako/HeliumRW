@@ -67,7 +67,7 @@ local libs = {
 loadLibraries(libs)
 
 function os.getVersion()
-  return semver "0.0.2-alpha"
+  return semver "0.0.3-alpha"
 end
 
 function os.getName()
@@ -78,12 +78,7 @@ function os.getFullName()
   return os.getName() .. " " .. tostring(os.getVersion())
 end
 
-log:logify("Test Class Transpiler", function()
-  local Resource = require "lib.resource"
-  Resource:new()
-end)
-
---[[log:logify("Sandbox Shell",function()
+log:logify("Sandbox Shell",function()
 
   sandbox = Sandbox:new("shell",_ENV)
   sandbox:addImport("bin/sym","bin")
@@ -93,4 +88,3 @@ end)
   sandbox:run "bin/shell.lua"
 
 end)
-]]

@@ -157,9 +157,6 @@ function Ram:export(path,to,deep)
   local what = what or "/"
 
   local function exp(base,from,to)
-
-    print(base, from, to)
-
     if(self:exists(base) and (not self:isDir(base))) then
       local handle = self:open(fs.combine(base,from),"r")
       local content = handle.readAll()
@@ -181,7 +178,7 @@ function Ram:export(path,to,deep)
       if(self:isDir(comb)) then
         self._parent:makeDir(fs.combine(to,from))
         if(deep) then
-          for k,v in pairs(self:list(base,from)) do
+          for k,v in pairs(self:list(fs.combine(base,from))) do
             exp(base, fs.combine(from,v),to)
           end
         end

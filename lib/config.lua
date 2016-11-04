@@ -1,5 +1,5 @@
 local Config = class "Config"
-
+local base
 local function dotSplit(str)
   local fields, length = {},0
     str:gsub("[^%.]+", function(c)
@@ -10,17 +10,18 @@ local function dotSplit(str)
 end
 
 function Config:initialize(name, callback)
+  base = fs.exists("persistent") and "persistent/config" or "config"
   self._conf = {}
   self._name = name
-  if(not fs.exists "config") then
-    fs.makeDir "config"
+  if(not fs.exists(base)) then
+    fs.makeDir(base)
   end
-  if(fs.exists(fs.combine("config",name..".json"))) then
-    local handle = fs.open(fs.combine("config",name..".json"),"r")
+  if(fs.exists(fs.combine(base,name..".json"))) then
+    local handle = fs.open(fs.combine(base,name..".json"),"r")
     self._conf = JSON.parse(handle.readAll())
     handle.close()
   else
-    local handle = fs.open(fs.combine("config",name..".json"),"w")
+    local handle = fs.open(fs.combine(base,name..".json"),"w")
     handle.write(JSON.stringify{})
     handle.close()
     if(callback) then callback() end
@@ -57,7 +58,7 @@ function Config:get(key,value)
 end
 
 function Config:save()
-  local handle = fs.open(fs.combine("config",self._name..".json"),"w")
+  local handle = fs.open(fs.combine(base,self._name..".json"),"w")
   handle.write(JSON.stringify(self._conf):gsub(",",",\n"):gsub("}","}\n"):gsub(":",": "):gsub("{", "{\n"):gsub("}\n,","},"))
   handle.close()
 end

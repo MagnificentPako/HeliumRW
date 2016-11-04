@@ -10,3 +10,7 @@ local function expectTable(check,base)
 end
 
 ]]
+
+@class Application {
+  
+}

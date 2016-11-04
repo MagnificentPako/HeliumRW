@@ -84,6 +84,7 @@ function Sandbox:run(path, ...)
     loadfile(path, self._env)(args)
   end)
 
+print(fs.combine(baseDir, self._name))
   ram:export("persistent",fs.combine(baseDir, self._name),true)
 end
 
