@@ -7,6 +7,8 @@ local function catchError(func)
   if(not ok) then error(err,4) end
 end
 
+local transpile = dofile "lib/class/transpiler.lua"
+
 --[[
 function loadfile(path,env)
   local env = env or _ENV
@@ -20,7 +22,15 @@ end
 local function _dofile(path,reqenv)
   local reqenv = reqenv or _ENV
   if(not fs.exists(path)) then
-    if(fs.exists(fs.combine(path,"")..".lua")) then
+    if(fs.exists(fs.combine(path,"")..".lclass")) then
+      local handle = fs.open(fs.combine(path,"")..".lclass","r")
+      local content = handle.readAll()
+      handle.close()
+      content = transpile(content)
+      local ok,err = load(content,path,nil, reqenv)
+      if(not ok) then error(err) end
+      return ok(path)
+    elseif(fs.exists(fs.combine(path,"")..".lua")) then
       local ok,err = loadfile(fs.combine(path,"")..".lua",reqenv)
       if(not ok) then error(err) end
       return ok(path)
@@ -40,6 +50,10 @@ local function _require(path,reqenv)
     path = path:sub(#path-4,#path)
     path = path:gsub("%.","/")
     path = path..".lua"
+  elseif(path:sub(#path-6,#path) == ".lclass") then
+      path = path:sub(#path-6,#path)
+      path = path:gsub("%.","/")
+      path = path..".lclass"
   else
     path = path:gsub("%.","/")
   end
@@ -62,6 +76,7 @@ end
 function require(path,reqenv)
   local cont
   catchError(function()
+
      cont = _require(path,reqenv)
     end)
   return cont

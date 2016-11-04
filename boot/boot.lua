@@ -1,6 +1,7 @@
 local env = _ENV or getfenv()
 
 --I need an "easier" environment
+_G["class"] = dofile "lib/class/middleclass.lua"
 dofile "lib/easify.lua"
 
 local function dcopy(t)
@@ -15,7 +16,7 @@ end
 
 --And now I load all the good stuff
 
-_G["class"] = require "lib.class.middleclass"
+
 
 --Load all the i18n stuff
 i18n = require "lib.i18n"
@@ -77,7 +78,12 @@ function os.getFullName()
   return os.getName() .. " " .. tostring(os.getVersion())
 end
 
-log:logify("Sandbox Shell",function()
+log:logify("Test Class Transpiler", function()
+  local Resource = require "lib.resource"
+  Resource:new()
+end)
+
+--[[log:logify("Sandbox Shell",function()
 
   sandbox = Sandbox:new("shell",_ENV)
   sandbox:addImport("bin/sym","bin")
@@ -87,3 +93,4 @@ log:logify("Sandbox Shell",function()
   sandbox:run "bin/shell.lua"
 
 end)
+]]
