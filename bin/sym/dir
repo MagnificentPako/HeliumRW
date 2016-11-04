@@ -10,7 +10,7 @@ for k,v in pairs(list) do
   end
 end
 
-local perLine = 5
+local perLine = 8
 local current = 1
 
 term.setTextColor(colors.yellow)

@@ -66,7 +66,6 @@ local function deleteNode(sys,path)
         if((not node[f[i]].dir) and not(i == l)) then error("Not a folder",2) end
         if(i == l) then
           print("deleting node "..f[i])
-          print(sys["config"].content["shell.json"])
           node[f[i]] = nil
         else
           node = node[f[i]].content
