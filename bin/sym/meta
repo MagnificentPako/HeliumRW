@@ -1,0 +1,41 @@
+local app = CLApp:new()
+
+local subRead = app:newCommand("read")
+local subWrite = app:newCommand("write")
+local subHelp = app:newCommand("help")
+
+local function printHelp()
+  print("meta read <path> <key>")
+  print("meta write <path> <key> <value>")
+  print("meta help")
+  print()
+  print("Append the -h flag to any command to get more information")
+end
+
+subHelp:setExecutor(printHelp)
+
+subRead:setExecutor(function(flags,args)
+  if(flags.h) then
+    print("meta read <path> <key>")
+    print("Returns the specified metadata from a file")
+    return
+  end
+  if(#args ~= 2) then error "Wrong amount of arguments!" end
+  local meta = fs.getMetadata(shell.resolve(args[1]),args[2])
+  print(args[2].." = "..inspect(meta))
+end)
+
+subWrite:setExecutor(function(flags,args)
+  if(flags.h) then
+    print("meta write <path> <key> <value>")
+    print("writes metadata to a file")
+    return
+  end
+  fs.setMetadata(shell.resolve(args[1]),args[2],args[3])
+end)
+
+app:main(function(flags,args)
+  printHelp()
+end)
+
+app:run(...)

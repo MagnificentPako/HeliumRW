@@ -24,10 +24,9 @@
   |
 
   run() |
-    os.queueEvent("OMAHGAWD;REFRESH")
-    while true do
-      os.queueEvent "update"
-      local evt = {os.pullEvent()}
+    local evt = {}
+    local allDead = false
+    while not allDead do
       local e = evt[1]
       for k,v in pairs(self._coroutines) do
         if(v.filter == nil or v.filter == e or e == "terminate") then
@@ -38,6 +37,14 @@
           end
         end
       end
+      allDead = true
+      for k,v in pairs(self._coroutines) do
+        if(coroutine.status(v.routine) ~= "dead") then
+          allDead = false
+        end
+      end
+      if(allDead) then break end
+      evt = {os.pullEvent()}
     end
   |
 

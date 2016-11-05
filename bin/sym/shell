@@ -18,6 +18,7 @@ local shell = {}
 function shell.getPath()
   return path
 end
+shell.path = shell.getPath
 
 function shell.setPath(pat)
   path = pat
@@ -26,10 +27,12 @@ end
 function shell.getCurrentDir()
   return currentDir
 end
+shell.dir = shell.getCurrentDir
 
 function shell.setCurrentDir(newDir)
   currentDir = newDir
 end
+shell.setDir = shell.setCurrentDir
 
 function shell.exit()
   running = false
@@ -37,8 +40,9 @@ function shell.exit()
 end
 
 function shell.getAbsolute(path)
-  return fs.combine(currentDir,path)
+  return fs.combine(((path:sub(1,1) == "/" or path:sub(1,1) == "\\") and "" or currentDir),path)
 end
+shell.resolve = shell.getAbsolute
 
 local function split(str,pat)
   local fields = {}
@@ -150,6 +154,4 @@ parallel.waitForAny(main)
 
 if(parent) then
   print "Exiting now..."
-  sleep(.3)
-  os.reboot()
 end

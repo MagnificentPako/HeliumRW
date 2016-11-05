@@ -65,7 +65,6 @@ local function deleteNode(sys,path)
         if(not node[f[i]]) then error("File doesn't exist",3) end
         if((not node[f[i]].dir) and not(i == l)) then error("Not a folder",2) end
         if(i == l) then
-          print("deleting node "..f[i])
           node[f[i]] = nil
         else
           node = node[f[i]].content
@@ -133,9 +132,24 @@ function Ram:import(path,to,deep)
       else
         local handle = self._parent:open(fs.combine(base, from),"r")
         local content = handle.readAll()
+        local s,e = content:find("^%-%-meta=.+%%\n")
+        local meta = ""
+        if(s) then
+          meta = content:sub(1,e)
+          meta = content:match("^%-%-meta=(.+)%%%%\n")
+          content = content:match("^%-%-meta=.+%%\n(.+)")
+          print(content)
+        end
+
         handle.close(); handle = self:open(fs.combine(too,from),"w")
         handle.write(content)
         handle.close()
+
+        if(s) then
+          local node = getNode(self._sys, fs.combine(too,from))
+          node.meta = textutils.unserialize(meta)
+        end
+
       end
     end
   end
@@ -184,6 +198,9 @@ function Ram:export(path,to,deep)
       else
         local handle = self:open(fs.combine(base,from),"r")
         local content = handle.readAll()
+        local metadata = getNode(self._sys, fs.combine(base,from)).meta
+        metadata = textutils.serialize(metadata):gsub("\n","")
+        content = "--meta="..metadata.."%%\n"..content
         handle.close(); handle = self._parent:open(fs.combine(to,from),"w")
         handle.write(content)
         handle.close()
@@ -219,7 +236,7 @@ function Ram:open(path, mode)
   if(mode == "r") then
     node = getNode(self._sys,path)
   elseif((mode == "w") or (mode == "a")) then
-    node = getNode(self._sys,path,{content = {}})
+    node = getNode(self._sys,path,{content = {}, meta={}})
   end
 
   if(node.dir) then error "Can't open a folder" end
@@ -382,6 +399,23 @@ function Ram:delete(path)
   end
 end
 
+function Ram:getMetadata(path,key)
+  local node = getNode(self._sys,path)
+  return dcopy(node.meta[key])
+end
+
+function Ram:setMetadata(path,key,value)
+    local node = getNode(self._sys,path)
+    node.meta[key] = dcopy(value)
+end
+
 -- FS FUNCTIONS END
+
+function Ram:makeLegacy()
+  local legacy = Base.makeLegacy(self)
+  legacy.getMetadata = function(...) return self:getMetadata(...) end
+  legacy.setMetadata = function(...) return self:setMetadata(...) end
+  return legacy
+end
 
 return Ram

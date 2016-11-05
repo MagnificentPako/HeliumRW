@@ -42,7 +42,7 @@ end
   |
 
   setExecutor(func) |
-    self._executor = func
+    self._executor = function(flags,args) term.setTextColor(colors.white) func(flags  or {}, args  or {}) end
   |
 
   setMain(bool) |
