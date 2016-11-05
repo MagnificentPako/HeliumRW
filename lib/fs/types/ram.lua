@@ -401,7 +401,7 @@ end
 
 function Ram:getMetadata(path,key)
   local node = getNode(self._sys,path)
-  return dcopy(node.meta[key])
+  return key and dcopy(node.meta[key]) or dcopy(node.meta)
 end
 
 function Ram:setMetadata(path,key,value)

@@ -20,9 +20,15 @@ subRead:setExecutor(function(flags,args)
     print("Returns the specified metadata from a file")
     return
   end
-  if(#args ~= 2) then error "Wrong amount of arguments!" end
+  if(#args < 1) then error "Wrong amount of arguments!" end
   local meta = fs.getMetadata(shell.resolve(args[1]),args[2])
-  print(args[2].." = "..inspect(meta))
+  if(not args[2]) then
+    for k,v in pairs(meta) do
+      print(k.. " = " .. inspect(v))
+    end
+  else
+    print(args[2].." = "..inspect(meta))
+  end
 end)
 
 subWrite:setExecutor(function(flags,args)
