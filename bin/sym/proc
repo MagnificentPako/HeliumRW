@@ -1,0 +1,43 @@
+local app = CLApp:new()
+
+local run = app:newCommand("run")
+local pause = app:newCommand("pause")
+local resume = app:newCommand("resume")
+local kill = app:newCommand("kill")
+
+local function splitPath(path)
+  local fields,length = {},0
+  path:gsub("[^/]+", function(c)
+    length = length+1
+    fields[length] = c
+  end)
+  return fields
+end
+
+kill:setExecutor(function(flags,args)
+  process.kill(tonumber(args[1]))
+end)
+
+run:setExecutor(function(flags,args)
+  local path = args[1]
+  path = shell.resolve(path)
+  if(not fs.exists(path)) then error("File not found!") end
+  local handle = fs.open(path,"r")
+  local content = handle.readAll()
+  handle.close()
+  local ok,err = load(content, path, nil, getfenv())
+  if(not ok) then error(err) end
+  local split = splitPath(path)
+  print(split)
+  process.addProcess(ok, args[2] and args[2] or split[#split])
+end)
+
+pause:setExecutor(function(flags,args)
+  process.pause(tonumber(args[1]))
+end)
+
+resume:setExecutor(function(flags,args)
+  process.start(tonumber(args[1]))
+end)
+
+app:run(...)

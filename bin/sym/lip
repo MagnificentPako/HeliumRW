@@ -1,0 +1,30 @@
+--List all the processes
+local procs = process.getAll()
+local w,h = term.getSize()
+local columnSize = math.floor(w/3)
+
+local function truncate(str)
+  str = tostring(str)
+  if(#str > columnSize) then
+    str = str:sub(1,columnSize-4).."... "
+  else
+    local left = columnSize-#str
+    str = str..(" "):rep(left)
+  end
+  return str
+end
+
+local function columize(s1,s2,s3,c1,c2,c3)
+  term.setTextColor(c1)
+  write(truncate(s1))
+  term.setTextColor(c2)
+  write(truncate(s2))
+  term.setTextColor(c3)
+  write(truncate(s3))
+  print()
+end
+
+columize("ID", "Title", "Active", colors.white, colors.white, colors.white)
+for k,v in pairs(procs) do
+  columize(v.id, v.name, v.active, colors.lightGray, colors.lightGray, v.active and colors.green or colors.red)
+end

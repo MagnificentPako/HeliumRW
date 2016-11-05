@@ -138,7 +138,6 @@ function Ram:import(path,to,deep)
           meta = content:sub(1,e)
           meta = content:match("^%-%-meta=(.+)%%%%\n")
           content = content:match("^%-%-meta=.+%%\n(.+)")
-          print(content)
         end
 
         handle.close(); handle = self:open(fs.combine(too,from),"w")

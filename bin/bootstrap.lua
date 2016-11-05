@@ -16,6 +16,8 @@ local function loadFile(path)
   return coroutine.create(ok)
 end
 
-manager:addCoroutine(loadFile("bin/shell"))
+manager:addCoroutine(loadFile("bin/shell"), "Shell")
+
+_G.process = manager:makeAPI()
 
 manager:run()

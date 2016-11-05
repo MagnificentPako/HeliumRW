@@ -3,12 +3,13 @@
   initialize() |
     self._coroutines = {}
     self._id = 0
+    self._current = 0
   |
 
-  addCoroutine(co) |
-    self._coroutines[self._id+1] = {routine = co, filter = nil, active = true}
+  addCoroutine(co, name) |
+    self._coroutines[self._id+1] = {routine = co, filter = nil, active = true, id = self._id+1, name = name}
     self._id = self._id+1
-    --return #self._id
+    return self._id
   |
 
   removeCoroutine(id) |
@@ -23,6 +24,28 @@
     self._coroutines[id].active = false
   |
 
+  makeAPI() |
+    return {
+      current = function() return self._current end;
+      addProcess = function(f,n)
+        local co = coroutine.create(f)
+        return self:addCoroutine(co,n)
+      end;
+      pause = function(id) self:disableCorotuine(id) end;
+      start = function(id) self:enableCoroutine(id) end;
+      getAll = function()
+        local procs = {}
+        for k,v in pairs(self._coroutines) do
+          table.insert(procs, {active = v.active, id = v.id, name = v.name})
+        end
+        return procs
+      end;
+      kill = function(id)
+        self._coroutines[id] = nil
+      end;
+    }
+  |
+
   run() |
     local evt = {}
     local allDead = false
@@ -32,6 +55,7 @@
         if(v.filter == nil or v.filter == e or e == "terminate") then
           if(v.active) then
             if(coroutine.status(v.routine) ~= "dead") then
+              self._current = v.id
               ok,v.filter = coroutine.resume(v.routine,unpack(evt))
             end
           end
@@ -40,7 +64,9 @@
       allDead = true
       for k,v in pairs(self._coroutines) do
         if(coroutine.status(v.routine) ~= "dead") then
-          allDead = false
+          if(v.active) then
+            allDead = false
+          end
         end
       end
       if(allDead) then break end
