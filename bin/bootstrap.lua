@@ -17,6 +17,7 @@ local function loadFile(path)
 end
 
 manager:addCoroutine(loadFile("bin/shell"), "Shell")
+manager:addCoroutine(loadFile("bin/daemon/shortcuts.proc"), "Shortcut Manager")
 
 _G.process = manager:makeAPI()
 

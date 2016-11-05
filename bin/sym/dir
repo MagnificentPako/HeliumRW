@@ -1,16 +1,18 @@
-local list = fs.list(shell.getCurrentDir())
+local args = {...}
+local dir = args[1] and shell.resolve(args[1]) or shell.getCurrentDir()
+local list = fs.list(dir)
 
 local dirs,files = {},{}
 
 for k,v in pairs(list) do
-  if(fs.isDir(fs.combine(shell.getCurrentDir(),v))) then
+  if(fs.isDir(fs.combine(dir,v))) then
     dirs[#dirs+1] = v
   else
     files[#files+1] = v
   end
 end
 
-local perLine = 8
+local perLine = 10
 local current = 1
 
 term.setTextColor(colors.yellow)

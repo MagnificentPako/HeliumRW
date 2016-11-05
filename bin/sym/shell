@@ -112,8 +112,6 @@ local function checkFile(name)
   return nil
 end
 
-local procid = process.addProcess(function() while true do sleep(1) end end, "REALLY LONG NAME WHICH LIP CAN'T COMPLETELY DISPLAY")
-
 local function main()
   while running do
     term.setTextColor(conf:get "colors.user")

@@ -1,12 +1,7 @@
 local args = {...}
 if(#args < 1) then error "Argument expected!" end
-local raw = args[1]
-if(raw:sub(1,1) == "/") then
-  shell.setCurrentDir("/")
-  return
-end
-if(raw:sub(1,2) == "./") then raw = raw:sub(2) end
-local abs = shell.getAbsolute(raw)
+--if(raw:sub(1,2) == "./") then raw = raw:sub(2) end
+local abs = shell.resolve(args[1])
 if(not fs.exists(abs)) then error("Folder doesn't exist",0) end
 if((abs ~= "") and (args[1] ~= "/")) then
   if(not fs.isDir(abs)) then error("Not a folder!") end

@@ -68,6 +68,12 @@ import {RamFS,WrapperFS} from lib.fs.types
       self._env[v.name] = require(v.path, self._env)
     end
 
+    self._env.sandbox = {}
+    function self._env.sandbox.savePersistent()
+      fs.delete(fs.combine(baseDir, self._name))
+      ram:export("persistent", fs.combine(baseDir, self._name),true)
+    end
+
     ram:makeDir("persistent")
     ram:import(fs.combine(baseDir, self._name), "persistent", true)
     self._env.fs = ram:makeLegacy()
@@ -78,6 +84,7 @@ import {RamFS,WrapperFS} from lib.fs.types
       print(loadfile)
       loadfile(path, self._env)(args)
     end)
+    fs.delete(fs.combine(baseDir, self._name))
     ram:export("persistent",fs.combine(baseDir, self._name),true)
   |
 
