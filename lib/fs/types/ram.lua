@@ -156,11 +156,6 @@ function Ram:import(path,to,deep)
   imp(path,"",to)
 end
 
--- Excludes a specific file from the RamFS
-function Ram:exclude(path)
-  --#TODO:10 Add functionality to @ram_exclude +RamFS
-end
-
 -- Exports the RamFS into the original FS
 function Ram:export(path,to,deep)
   local base = path

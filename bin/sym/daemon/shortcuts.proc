@@ -14,6 +14,7 @@ local function addShortcut(combo,func)
 end
 
 --detect CTRL+R and CTRL+S and force-save the persistent folder
+-- #TODO: Move CTRL+R/S shortcuts from shortcuts.proc to some other lower-level place +chore id:0 gh:2
 addShortcut({keys.leftCtrl, keys.r}, sandbox.savePersistent)
 addShortcut({keys.leftCtrl, keys.s}, sandbox.savePersistent)
 
