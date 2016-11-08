@@ -1,6 +1,0 @@
-local args = {...}
-if(#args < 1) then error "Argument expected" end
-local abs = shell.getAbsolute(...)
-if(not fs.exists(abs)) then error "Doesn't exist!" end
-if(fs.isDir(abs)) then error "Use the recursive flag to delete folders!" end
-fs.delete(abs)
