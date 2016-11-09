@@ -10,4 +10,4 @@
 
 [Help](help.md)
 
-[gimmick:ForkMeOnGitHub](http://www.github.com/TheFreakLord/HeliumRW)
+[gimmick:ForkMeOnGitHub (position: "right", color: "gray") ](http://www.github.com/TheFreakLord/HeliumRW)
