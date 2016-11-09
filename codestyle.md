@@ -26,7 +26,7 @@ local BaseClass = require "path.to.BaseClass"
 import BaseClass from path.to
 import {BaseClass, OtherClass} from path.to
 ```
-Note that when using the new syntax you don't explicitly define the file to import in the path: in Lua it would look like this `local BaseClass = require("path.to")["BaseClass"]`. The path has to contain an init.lua file which returns a table of this format:
+Note: when using the new syntax you don't explicitly define the file to import in the path: in Lua it would look like this `local BaseClass = require("path.to")["BaseClass"]`. The path has to contain an init.lua file which returns a table of this format:
 ```
 return {
   ["BaseClass"] = require "path.to.BaseClass"
