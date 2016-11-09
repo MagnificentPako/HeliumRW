@@ -44,4 +44,4 @@ import BaseClass from path.to.BaseClass
 }
 ```
 
-Note that it IS possible to write normal above and below an LClass, but you shouldn't "interfer" with the class. Everything after the class wouldn't be executed, for example because of how the transpiler works right now. Just stick to "1 class per file" and you should be good to go.
+Note: It IS possible to write normal code above and below an LClass, but you shouldn't "interfer" with the class. Everything after the class wouldn't be executed for example because of how the transpiler works right now. Just stick to "1 class per file" and you should be good to go.
