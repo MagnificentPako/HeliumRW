@@ -10,7 +10,5 @@
 
 [Help](help.md)
 
-[gimmick:themechooser](Choose Theme)
-
-[gimmick:theme](superhero)
+[gimmick:theme](flatly)
 [gimmick:ForkMeOnGitHub (position: "right", color: "gray") ](http://www.github.com/TheFreakLord/HeliumRW)
