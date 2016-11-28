@@ -5,13 +5,13 @@ Note: I expect that your script already imported the classes if they are not pre
 A simple class which allows you to store key/value configs in files.
 ### Usage
 #### Creating an instance
-```lua
+```
 -- The current design sucks. I have no idea why I'm using a callback to handle it if a new config was created
 local new
 local conf = Config:new("path/to/config", function() new = true end)
 ```
 #### Setting/Getting some values
-```lua
+```
 -- Setting
 conf:set("path.to.value", "Content")
 conf:set("see.that.notation", "pretty, right?")
@@ -20,7 +20,7 @@ conf:set("see.that.notation", "pretty, right?")
 print(conf:get"see.that.notation", "Yep!")
 ```
 #### Saving
-```lua
+```
 conf:save()
 ```
 
@@ -29,15 +29,15 @@ conf:save()
 This is just a wrapper for a RamFS. It basically allows you to store an entire filesystem in one file, without having to care about setting up a RamFS. (which isn't much, actually)
 ### Usage
 #### Creating a Container
-```lua
+```
 local container = Container:new()
 ```
 #### Importing files (and folders) into the container
-```lua
+```
 container:import "path/to/folder/file"
 ```
 #### Saving/Loading a Container
-```lua
+```
 -- Loading
 container:load "path/to/container"
 
@@ -52,7 +52,7 @@ WIP
 A simple class which you can use to semi-magically make a folder work with the transpiled "import".
 ### Usage
 Note: This is expected to only run inside a init.lua file. Although you might find some other use case though.
-```lua
+```
 local proxy = ImportProxy:new()
 
 -- Add files to the proxy
