@@ -48,19 +48,19 @@ Note: I expect that your script already imported the classes if they are not pre
   WIP
 
 ## ImportProxy
-  ### WTF is this?
-    A simple class which you can use to semi-magically make a folder work with the transpiled "import".
-  ### Usage
-    Note: This is expected to only run inside a init.lua file. Although you might find some other use case though.
-      ```lua
-      local proxy = ImportProxy:new()
+### WTF is this?
+A simple class which you can use to semi-magically make a folder work with the transpiled "import".
+### Usage
+Note: This is expected to only run inside a init.lua file. Although you might find some other use case though.
+```lua
+local proxy = ImportProxy:new()
 
-      -- Add files to the proxy
-      proxy:add("ClassName","path/to/class")
+-- Add files to the proxy
+proxy:add("ClassName","path/to/class")
 
-      -- Return the finished table
-      return proxy:convert()
-      ```
+-- Return the finished table
+return proxy:convert()
+```
 
 ## Sandbox
   WIP
