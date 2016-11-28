@@ -45,7 +45,7 @@ Note: I expect that your script already imported the classes if they are not pre
       container:save "path/to/container"
       ```
 ## CoroutineManager
-WIP
+  WIP
 
 ## ImportProxy
   ### WTF is this?
@@ -61,19 +61,42 @@ WIP
       -- Return the finished table
       return proxy:convert()
       ```
+
 ## Sandbox
+  WIP
+
 ## Resource
+  WIP
+
 ## Logging
-### BaseLog
-### FileLog
-### TermLog
-### MirrorLog
+  WIP
+
+  ### BaseLog
+    WIP
+
+  ### FileLog
+    WIP
+  ### TermLog
+    WIP
+  ### MirrorLog
+    WIP
+
 ## FS
-### Middleware
-#### BaseMiddleware
-#### Base64Middleware
-### Types
-#### BaseFS
-#### RamFS
-#### WrapperFS
+  WIP
+  ### Middleware
+    WIP
+    #### BaseMiddleware
+      WIP
+    #### Base64Middleware
+      WIP
+  ### Types
+    WIP
+    #### BaseFS
+      WIP
+    #### RamFS
+      WIP
+    #### WrapperFS
+      WIP
+
 ## CLApp
+  WIP
